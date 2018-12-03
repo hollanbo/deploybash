@@ -29,11 +29,17 @@ function selectLatestHotfix {
 }
 
 function finishHotfix {
+    echo "flow hotfix finish $tag -m 'Message'"
     git flow hotfix finish $tag -m "Message"
+    echo "push origin develop"
     git push origin develop
+    echo "push origin master"
     git push origin master
+    echo "push origin $tag"
     git push origin $tag
+    echo "flow hotfix start $tagNew"
     git flow hotfix start $tagNew
+    echo "push hotfix/$tagNew"
     git push hotfix/$tagNew
 
 }
