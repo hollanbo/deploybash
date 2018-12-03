@@ -12,6 +12,7 @@ function pullData {
 
 function selectLatestHotfix {
     latestVersion=$((${array[2]}+1))
+    newVersion=$(($latestVersion+1))
     tag="${array[0]}.${array[1]}.$latestVersion"
     branch="hotfix/$tag"
     checkoutOutput=$(git checkout $branch 2>&1)
@@ -27,7 +28,12 @@ function selectLatestHotfix {
 
 function finishHotfix {
     git flow hotfix finish $tag -m "Message"
-    git push develop
+    git push origin develop
+    git push origin master
+    git push origin $tag
+    git flow hotfix start newVersion
+    git push hotfix/$newVersion
+
 }
 
 function deploy {
