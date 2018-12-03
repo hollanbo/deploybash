@@ -14,6 +14,7 @@ function selectLatestHotfix {
     latestVersion=$((${array[2]}+1))
     newVersion=$(($latestVersion+1))
     tag="${array[0]}.${array[1]}.$latestVersion"
+    tagNew="${array[0]}.${array[1]}.$newVersion"
     branch="hotfix/$tag"
     checkoutOutput=$(git checkout $branch 2>&1)
 
