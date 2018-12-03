@@ -6,14 +6,13 @@ function getReleaseArray {
 }
 
 function pullData {
-    git checkout develop
-    git pull
-    git checkout master
-    git pull
+    git pull origin develop
+    git pull origin master
 }
 
 function selectLatestHotfix {
     latestVersion=$((${array[2]}+1))
+    newVersion=$(($latestVersion+1))
     tag="${array[0]}.${array[1]}.$latestVersion"
     branch="hotfix/$tag"
     checkoutOutput=$(git checkout $branch 2>&1)
@@ -29,6 +28,12 @@ function selectLatestHotfix {
 
 function finishHotfix {
     git flow hotfix finish $tag -m "Message"
+    git push origin develop
+    git push origin master
+    git push origin $tag
+    git flow hotfix start newVersion
+    git push hotfix/$newVersion
+
 }
 
 function deploy {
