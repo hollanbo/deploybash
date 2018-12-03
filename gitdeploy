@@ -16,6 +16,7 @@ function selectLatestHotfix {
     tag="${array[0]}.${array[1]}.$latestVersion"
     tagNew="${array[0]}.${array[1]}.$newVersion"
     branch="hotfix/$tag"
+    branchNew="hotfix/$tagNew"
     checkoutOutput=$(git checkout $branch 2>&1)
 
     if [[ $checkoutOutput == *"error"* ]]; then
@@ -32,8 +33,8 @@ function finishHotfix {
     git push origin develop
     git push origin master
     git push origin $tag
-    git flow hotfix start newVersion
-    git push hotfix/$newVersion
+    git flow hotfix start $tagNew
+    git push hotfix/$tagNew
 
 }
 
