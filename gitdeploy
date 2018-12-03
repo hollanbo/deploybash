@@ -1,0 +1,55 @@
+#!/bin/bash
+
+function getReleaseArray {
+    split=$(git describe --abbrev=0 | tr "." " ")
+    read -a array <<< $split
+}
+
+function pullData {
+    git checkout develop
+    git pull
+    git checkout master
+    git pull
+}
+
+function selectLatestHotfix {
+    latestVersion=$((${array[2]}+1))
+    tag="${array[0]}.${array[1]}.$latestVersion"
+    branch="hotfix/$tag"
+    checkoutOutput=$(git checkout $branch 2>&1)
+
+    if [[ $checkoutOutput == *"error"* ]]; then
+        echo -e "\n\nMissing branch $branch"
+
+    else
+        echo -e "$checkoutOutput"
+        git pull
+    fi
+}
+
+function finishHotfix {
+    git flow hotfix finish $tag -m "Message"
+}
+
+function deploy {
+    pullData
+    getReleaseArray
+    selectLatestHotfix
+
+    if [[ $checkoutOutput == *"error"* ]]
+    then
+        return
+    else
+        if [[ $checkoutOutput == *"fatal"* ]]
+        then
+            return
+        fi
+    fi
+
+    finishHotfix
+
+}
+
+deploy
+
+
