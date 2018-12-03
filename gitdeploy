@@ -6,10 +6,8 @@ function getReleaseArray {
 }
 
 function pullData {
-    git checkout develop
-    git pull
-    git checkout master
-    git pull
+    git pull origin develop
+    git pull origin master
 }
 
 function selectLatestHotfix {
@@ -29,6 +27,7 @@ function selectLatestHotfix {
 
 function finishHotfix {
     git flow hotfix finish $tag -m "Message"
+    git push develop
 }
 
 function deploy {
